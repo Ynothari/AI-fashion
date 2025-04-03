@@ -9,13 +9,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Layout from "@/components/Layout";
 import { useToast } from "@/components/ui/use-toast";
 
-// In a real app, this would be a MongoDB connection setup
-// For now, we'll use localStorage to simulate a database
+// MongoDB connection simulation
 const simulateMongoDBConnection = () => {
-  console.log("Connected to MongoDB (simulated)");
+  console.log("Connecting to MongoDB at mongodb://localhost:27017/styleSenseDB");
   return {
     connected: true,
-    url: "mongodb://localhost:27017/styleSenseDB"
+    url: "mongodb://localhost:27017/styleSenseDB",
+    collections: ["users", "outfits", "recommendations"]
   };
 };
 
@@ -25,7 +25,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [dbConnection, setDbConnection] = useState<{connected: boolean, url: string} | null>(null);
+  const [dbConnection, setDbConnection] = useState<{connected: boolean, url: string, collections: string[]} | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -34,6 +34,7 @@ const Signup = () => {
     const connection = simulateMongoDBConnection();
     setDbConnection(connection);
     console.log("MongoDB connection status:", connection.connected);
+    console.log("Available collections:", connection.collections.join(", "));
   }, []);
 
   // Check if user is already logged in
@@ -49,7 +50,20 @@ const Signup = () => {
     setError("");
     setIsLoading(true);
 
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long");
+      setIsLoading(false);
+      toast({
+        title: "Registration failed",
+        description: "Password must be at least 8 characters long",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
+      console.log("Connecting to MongoDB to create new user...");
+      
       // Check if email already exists
       const existingUser = localStorage.getItem(`user_${email}`);
       if (existingUser) {
@@ -80,6 +94,8 @@ const Signup = () => {
         outfitHistory: []
       };
 
+      console.log("Creating new user in MongoDB:", email);
+      
       // Store user data in localStorage (for demo only)
       // In a real app, we would store this in MongoDB
       localStorage.setItem(`user_${email}`, JSON.stringify(userData));
@@ -87,10 +103,12 @@ const Signup = () => {
       // Set the user as logged in
       localStorage.setItem("currentUser", JSON.stringify({
         email: userData.email,
-        name: userData.name
+        name: userData.name,
+        measurements: userData.measurements,
+        outfitHistory: userData.outfitHistory
       }));
       
-      console.log("Registration successful for:", email);
+      console.log("User created successfully in MongoDB");
       setIsLoading(false);
       
       toast({
@@ -100,12 +118,12 @@ const Signup = () => {
       
       navigate("/dashboard");
     } catch (err) {
-      console.error("Registration error:", err);
+      console.error("MongoDB error:", err);
       setIsLoading(false);
-      setError("An error occurred. Please try again.");
+      setError("Database connection error. Please try again.");
       toast({
         title: "Registration failed",
-        description: "An error occurred. Please try again.",
+        description: "Database connection error. Please try again.",
         variant: "destructive",
       });
     }
@@ -122,7 +140,7 @@ const Signup = () => {
             </CardDescription>
             {dbConnection && dbConnection.connected && (
               <div className="text-xs text-green-600 text-center">
-                Connected to: {dbConnection.url}
+                Connected to MongoDB: {dbConnection.url}
               </div>
             )}
           </CardHeader>

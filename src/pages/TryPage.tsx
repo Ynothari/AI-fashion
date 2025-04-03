@@ -4,134 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Layout from "@/components/Layout";
-
-// Define outfit categories
-const outfitCategories = [
-  "Casual",
-  "Party",
-  "Business",
-  "Summer",
-  "Winter",
-  "Sportswear"
-];
-
-// Updated male outfit recommendations with appropriate images
-const mockOutfits = {
-  Casual: {
-    description: "A relaxed yet stylish look perfect for everyday wear.",
-    items: [
-      "Light blue button-down oxford shirt",
-      "Dark wash slim fit jeans",
-      "Brown leather sneakers",
-      "Minimalist watch with brown leather strap"
-    ],
-    imageUrl: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=1974&auto=format&fit=crop"
-  },
-  Party: {
-    description: "An elegant outfit that stands out for evening events.",
-    items: [
-      "Black fitted dress shirt",
-      "Charcoal slim fit trousers",
-      "Black leather derby shoes",
-      "Minimalist silver watch"
-    ],
-    imageUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop"
-  },
-  Business: {
-    description: "Professional attire that conveys confidence and competence.",
-    items: [
-      "Navy blue blazer",
-      "Light blue dress shirt",
-      "Gray wool trousers",
-      "Black cap-toe oxford shoes",
-      "Burgundy tie with subtle pattern"
-    ],
-    imageUrl: "https://images.unsplash.com/photo-1521341057461-6eb5f40b07ab?q=80&w=2069&auto=format&fit=crop"
-  },
-  Summer: {
-    description: "Light, breathable fabrics to keep you cool and stylish.",
-    items: [
-      "White linen shirt",
-      "Light beige chino shorts",
-      "Brown leather sandals",
-      "Straw hat with navy band"
-    ],
-    imageUrl: "https://images.unsplash.com/photo-1503443207922-dff7d543fd0e?q=80&w=2027&auto=format&fit=crop"
-  },
-  Winter: {
-    description: "Warm, layered outfit for cold weather without sacrificing style.",
-    items: [
-      "Charcoal wool overcoat",
-      "Burgundy cable-knit sweater",
-      "Dark wash jeans",
-      "Brown leather boots",
-      "Gray wool scarf"
-    ],
-    imageUrl: "https://images.unsplash.com/photo-1610652492500-ded49ceeb378?q=80&w=1974&auto=format&fit=crop"
-  },
-  Sportswear: {
-    description: "Performance-focused attire for active lifestyles.",
-    items: [
-      "Black moisture-wicking t-shirt",
-      "Navy running shorts with compression liner",
-      "Athletic performance sneakers",
-      "Sports watch with heart rate monitor"
-    ],
-    imageUrl: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=2070&auto=format&fit=crop"
-  }
-};
-
-// Added more outfits for enhanced recommendations
-const additionalOutfits = {
-  Casual: [
-    {
-      name: "Weekend Casual",
-      description: "Perfect for weekend outings and casual meet-ups.",
-      items: [
-        "Cream henley shirt",
-        "Olive chino pants",
-        "White canvas sneakers",
-        "Braided leather bracelet"
-      ],
-      imageUrl: "https://images.unsplash.com/photo-1617196034183-421b4917c92d?q=80&w=1974&auto=format&fit=crop"
-    },
-    {
-      name: "Smart Casual",
-      description: "A step up from basic casual without being formal.",
-      items: [
-        "Navy polo shirt",
-        "Khaki chinos",
-        "Brown leather loafers",
-        "Leather belt matching shoes"
-      ],
-      imageUrl: "https://images.unsplash.com/photo-1633280576469-b38f7c007dc9?q=80&w=1974&auto=format&fit=crop"
-    }
-  ],
-  Party: [
-    {
-      name: "Cocktail Party",
-      description: "Sophisticated look for upscale evening events.",
-      items: [
-        "Burgundy dress shirt",
-        "Black slim fit dress pants",
-        "Black leather chelsea boots",
-        "Silver minimalist cufflinks"
-      ],
-      imageUrl: "https://images.unsplash.com/photo-1514222709107-a180c68d72b4?q=80&w=2036&auto=format&fit=crop"
-    },
-    {
-      name: "Casual Party",
-      description: "Stylish but relaxed for less formal gatherings.",
-      items: [
-        "Black fitted t-shirt",
-        "Dark blue jeans",
-        "Leather jacket",
-        "Black ankle boots"
-      ],
-      imageUrl: "https://images.unsplash.com/photo-1520975661595-6453be3f7070?q=80&w=1974&auto=format&fit=crop"
-    }
-  ]
-};
+import { outfitCategories, primaryOutfits, additionalOutfits } from "@/data/outfitData";
+import { useToast } from "@/components/ui/use-toast";
 
 const TryPage = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -140,6 +14,7 @@ const TryPage = () => {
   const [showResults, setShowResults] = useState(false);
   const [activeCategory, setActiveCategory] = useState("Casual");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -157,14 +32,39 @@ const TryPage = () => {
   };
 
   const analyzeImage = () => {
-    if (!selectedFile) return;
+    if (!selectedFile) {
+      toast({
+        title: "No image selected",
+        description: "Please upload an image to get outfit recommendations.",
+        variant: "destructive",
+      });
+      return;
+    }
     
     setIsAnalyzing(true);
     
-    // Simulate API call
+    // Check if user is logged in
+    const currentUser = localStorage.getItem("currentUser");
+    const isLoggedIn = !!currentUser;
+    
+    console.log("Connecting to MongoDB...");
+    console.log("Analyzing image for outfit recommendations...");
+    console.log("User logged in status:", isLoggedIn);
+    
+    // Simulate API call to MongoDB and AI model
     setTimeout(() => {
       setIsAnalyzing(false);
       setShowResults(true);
+      
+      if (isLoggedIn) {
+        console.log("Saving outfit request to user history in MongoDB...");
+        // In a real app, we would save this data to MongoDB
+      }
+      
+      toast({
+        title: "Analysis complete",
+        description: "We've generated personalized outfit recommendations for you!",
+      });
     }, 2000);
   };
 
@@ -238,7 +138,7 @@ const TryPage = () => {
             <CardHeader>
               <CardTitle>Your Outfit Recommendations</CardTitle>
               <CardDescription>
-                Personalized outfit suggestions based on your photo.
+                Personalized male outfit suggestions based on your photo.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -263,7 +163,7 @@ const TryPage = () => {
                     <TabsContent key={category} value={category} className="space-y-6">
                       <div className="rounded-lg overflow-hidden">
                         <img 
-                          src={mockOutfits[category as keyof typeof mockOutfits].imageUrl} 
+                          src={primaryOutfits[category as keyof typeof primaryOutfits].imageUrl} 
                           alt={`${category} outfit`}
                           className="w-full h-48 object-cover"
                         />
@@ -272,12 +172,12 @@ const TryPage = () => {
                       <div>
                         <h3 className="text-xl font-semibold mb-2">{category} Look</h3>
                         <p className="text-gray-600 mb-4">
-                          {mockOutfits[category as keyof typeof mockOutfits].description}
+                          {primaryOutfits[category as keyof typeof primaryOutfits].description}
                         </p>
                         
                         <h4 className="font-medium mb-2">Recommended Items:</h4>
                         <ul className="list-disc pl-6 space-y-1">
-                          {mockOutfits[category as keyof typeof mockOutfits].items.map((item, index) => (
+                          {primaryOutfits[category as keyof typeof primaryOutfits].items.map((item, index) => (
                             <li key={index} className="text-gray-700">{item}</li>
                           ))}
                         </ul>

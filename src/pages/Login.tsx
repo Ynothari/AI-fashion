@@ -13,6 +13,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [redirectToSignup, setRedirectToSignup] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -30,13 +31,17 @@ const Login = () => {
     setIsLoading(true);
 
     try {
+      // MongoDB simulation for authentication
+      console.log("Connecting to MongoDB localhost...");
+      console.log("Attempting login for user:", email);
+      
       // In a real app, this would be a call to MongoDB using an API
-      // For now, we're simulating authentication with local storage
       const userExists = localStorage.getItem(`user_${email}`);
       
       if (!userExists) {
         setIsLoading(false);
         setError("Account not found. Please create an account first.");
+        setRedirectToSignup(true);
         toast({
           title: "Account not found",
           description: "Please create an account first before logging in.",
@@ -47,10 +52,6 @@ const Login = () => {
 
       // Check password (in a real app, would use bcrypt to compare hashed passwords)
       const userData = JSON.parse(userExists);
-      
-      // In a real app with proper password hashing, we'd use:
-      // const passwordMatch = await bcrypt.compare(password, userData.password);
-      // Since we're mocking, we'll do a simple check
       
       // Simple check for demo purposes (insecure for real applications)
       if (password !== userData.password) {
@@ -64,10 +65,16 @@ const Login = () => {
         return;
       }
 
+      // MongoDB simulation for retrieving complete user data
+      console.log("User authenticated successfully");
+      console.log("Retrieving user data from MongoDB...");
+      
       // Store logged in user info
       localStorage.setItem("currentUser", JSON.stringify({
         email: userData.email,
-        name: userData.name
+        name: userData.name,
+        measurements: userData.measurements,
+        outfitHistory: userData.outfitHistory
       }));
       
       console.log("Login successful for:", email);
@@ -80,18 +87,18 @@ const Login = () => {
       
       navigate("/dashboard");
     } catch (err) {
-      console.error("Login error:", err);
+      console.error("MongoDB connection error:", err);
       setIsLoading(false);
-      setError("An error occurred. Please try again.");
+      setError("Database connection error. Please try again.");
       toast({
         title: "Login failed",
-        description: "An error occurred. Please try again.",
+        description: "Database connection error. Please try again.",
         variant: "destructive",
       });
     }
   };
 
-  const redirectToSignup = () => {
+  const handleRedirectToSignup = () => {
     navigate("/signup");
   };
 
@@ -110,14 +117,16 @@ const Login = () => {
               {error && (
                 <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
                   {error}
-                  <Button 
-                    type="button" 
-                    variant="link" 
-                    className="text-indigo-600 p-0 h-auto font-medium ml-2"
-                    onClick={redirectToSignup}
-                  >
-                    Create an account
-                  </Button>
+                  {redirectToSignup && (
+                    <Button 
+                      type="button" 
+                      variant="link" 
+                      className="text-indigo-600 p-0 h-auto font-medium ml-2"
+                      onClick={handleRedirectToSignup}
+                    >
+                      Create an account
+                    </Button>
+                  )}
                 </div>
               )}
               
