@@ -29,7 +29,7 @@ export const primaryOutfits = {
       "Black leather derby shoes",
       "Minimalist silver watch"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1617196034183-421b4917c92d?q=80&w=1974&auto=format&fit=crop"
+    imageUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop"
   },
   Business: {
     description: "Professional attire that conveys confidence and competence.",
@@ -71,7 +71,7 @@ export const primaryOutfits = {
       "Athletic performance sneakers",
       "Sports watch with heart rate monitor"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1616690010099-0f87a9a0f762?q=80&w=1974&auto=format&fit=crop"
+    imageUrl: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=1740&auto=format&fit=crop"
   }
 };
 
@@ -122,7 +122,7 @@ export const additionalOutfits = {
         "Black leather chelsea boots",
         "Silver minimalist cufflinks"
       ],
-      imageUrl: "https://images.unsplash.com/photo-1621353269062-6aa0165156a1?q=80&w=1964&auto=format&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1617196034183-421b4917c92d?q=80&w=1974&auto=format&fit=crop"
     },
     {
       name: "Casual Party",
@@ -325,22 +325,3 @@ export const bodyTypeRecommendations = {
   }
 };
 
-// Weather-appropriate recommendations
-export const weatherRecommendations = {
-  Sunny: {
-    fabrics: ["Cotton", "Linen", "Chambray"],
-    tips: ["Light colors to reflect heat", "Breathable fabrics", "UV protection"]
-  },
-  Rainy: {
-    fabrics: ["Waxed cotton", "Gore-Tex", "Nylon"],
-    tips: ["Waterproof outer layers", "Quick-drying fabrics", "Avoid canvas shoes"]
-  },
-  Cold: {
-    fabrics: ["Wool", "Cashmere", "Flannel", "Down"],
-    tips: ["Layer for insulation", "Cover extremities", "Thermal base layers"]
-  },
-  Warm: {
-    fabrics: ["Light cotton", "Linen blends", "Technical fabrics"],
-    tips: ["Loose fits for air circulation", "Light colors", "Breathable materials"]
-  }
-};
