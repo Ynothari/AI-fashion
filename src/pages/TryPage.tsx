@@ -15,7 +15,7 @@ const outfitCategories = [
   "Sportswear"
 ];
 
-// Mock outfit recommendations
+// Mock outfit recommendations with male-appropriate images
 const mockOutfits = {
   Casual: {
     description: "A relaxed yet stylish look perfect for everyday wear.",
@@ -25,7 +25,7 @@ const mockOutfits = {
       "Brown leather sneakers",
       "Minimalist watch with brown leather strap"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
+    imageUrl: "https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=1974&auto=format&fit=crop"
   },
   Party: {
     description: "An elegant outfit that stands out for evening events.",
@@ -35,7 +35,7 @@ const mockOutfits = {
       "Black leather derby shoes",
       "Minimalist silver watch"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+    imageUrl: "https://images.unsplash.com/photo-1593032465175-481ac7f401a0?q=80&w=2080&auto=format&fit=crop"
   },
   Business: {
     description: "Professional attire that conveys confidence and competence.",
@@ -46,7 +46,7 @@ const mockOutfits = {
       "Black cap-toe oxford shoes",
       "Burgundy tie with subtle pattern"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7"
+    imageUrl: "https://images.unsplash.com/photo-1513269890889-8e4e362e5593?q=80&w=2070&auto=format&fit=crop"
   },
   Summer: {
     description: "Light, breathable fabrics to keep you cool and stylish.",
@@ -56,7 +56,7 @@ const mockOutfits = {
       "Brown leather sandals",
       "Straw hat with navy band"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7"
+    imageUrl: "https://images.unsplash.com/photo-1618886614638-80e3c103d31a?q=80&w=2070&auto=format&fit=crop"
   },
   Winter: {
     description: "Warm, layered outfit for cold weather without sacrificing style.",
@@ -67,7 +67,7 @@ const mockOutfits = {
       "Brown leather boots",
       "Gray wool scarf"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7"
+    imageUrl: "https://images.unsplash.com/photo-1608236415053-3691791bbffe?q=80&w=1974&auto=format&fit=crop"
   },
   Sportswear: {
     description: "Performance-focused attire for active lifestyles.",
@@ -77,7 +77,7 @@ const mockOutfits = {
       "Athletic performance sneakers",
       "Sports watch with heart rate monitor"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475"
+    imageUrl: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=1975&auto=format&fit=crop"
   }
 };
 

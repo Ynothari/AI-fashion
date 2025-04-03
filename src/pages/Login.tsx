@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Layout from "@/components/Layout";
+import { useToast } from "@/components/ui/use-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,12 +22,37 @@ const Login = () => {
     setIsLoading(true);
 
     // This would be replaced with actual authentication logic
+    // For demo purposes, we're checking if the user exists
     setTimeout(() => {
+      // Simulating a user check
+      const userExists = localStorage.getItem(`user_${email}`);
+      
+      if (!userExists) {
+        setIsLoading(false);
+        setError("Account not found. Please create an account first.");
+        toast({
+          title: "Account not found",
+          description: "Please create an account first before logging in.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       // Mock successful login
       console.log("Login successful for:", email);
       setIsLoading(false);
+      
+      toast({
+        title: "Login successful",
+        description: "Welcome back to StyleSense!",
+      });
+      
       navigate("/dashboard");
     }, 1500);
+  };
+
+  const redirectToSignup = () => {
+    navigate("/signup");
   };
 
   return (
@@ -43,6 +70,14 @@ const Login = () => {
               {error && (
                 <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
                   {error}
+                  <Button 
+                    type="button" 
+                    variant="link" 
+                    className="text-indigo-600 p-0 h-auto font-medium ml-2"
+                    onClick={redirectToSignup}
+                  >
+                    Create an account
+                  </Button>
                 </div>
               )}
               

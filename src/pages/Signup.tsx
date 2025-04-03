@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import Layout from "@/components/Layout";
+import { useToast } from "@/components/ui/use-toast";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -15,17 +16,51 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
+    // Check if email already exists
+    const existingUser = localStorage.getItem(`user_${email}`);
+    if (existingUser) {
+      setError("An account with this email already exists.");
+      setIsLoading(false);
+      return;
+    }
+
     // This would be replaced with actual registration logic
     setTimeout(() => {
+      // Mock user data storage
+      const userData = {
+        name,
+        email,
+        password: "********", // In a real app, this would be properly hashed
+        createdAt: new Date().toISOString(),
+        measurements: {
+          height: "",
+          weight: "",
+          hipSize: "",
+          skinTone: "",
+          bodyType: ""
+        },
+        outfitHistory: []
+      };
+
+      // Store user data in localStorage (for demo purposes only)
+      localStorage.setItem(`user_${email}`, JSON.stringify(userData));
+      
       // Mock successful registration
       console.log("Registration successful for:", email);
       setIsLoading(false);
+      
+      toast({
+        title: "Account created",
+        description: "Your account has been created successfully!",
+      });
+      
       navigate("/dashboard");
     }, 1500);
   };
