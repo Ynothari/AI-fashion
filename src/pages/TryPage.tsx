@@ -15,7 +15,7 @@ const outfitCategories = [
   "Sportswear"
 ];
 
-// Mock outfit recommendations with male-appropriate images
+// Updated male outfit recommendations with appropriate images
 const mockOutfits = {
   Casual: {
     description: "A relaxed yet stylish look perfect for everyday wear.",
@@ -25,7 +25,7 @@ const mockOutfits = {
       "Brown leather sneakers",
       "Minimalist watch with brown leather strap"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=1974&auto=format&fit=crop"
+    imageUrl: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=1974&auto=format&fit=crop"
   },
   Party: {
     description: "An elegant outfit that stands out for evening events.",
@@ -35,7 +35,7 @@ const mockOutfits = {
       "Black leather derby shoes",
       "Minimalist silver watch"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1593032465175-481ac7f401a0?q=80&w=2080&auto=format&fit=crop"
+    imageUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop"
   },
   Business: {
     description: "Professional attire that conveys confidence and competence.",
@@ -46,7 +46,7 @@ const mockOutfits = {
       "Black cap-toe oxford shoes",
       "Burgundy tie with subtle pattern"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1513269890889-8e4e362e5593?q=80&w=2070&auto=format&fit=crop"
+    imageUrl: "https://images.unsplash.com/photo-1521341057461-6eb5f40b07ab?q=80&w=2069&auto=format&fit=crop"
   },
   Summer: {
     description: "Light, breathable fabrics to keep you cool and stylish.",
@@ -56,7 +56,7 @@ const mockOutfits = {
       "Brown leather sandals",
       "Straw hat with navy band"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1618886614638-80e3c103d31a?q=80&w=2070&auto=format&fit=crop"
+    imageUrl: "https://images.unsplash.com/photo-1503443207922-dff7d543fd0e?q=80&w=2027&auto=format&fit=crop"
   },
   Winter: {
     description: "Warm, layered outfit for cold weather without sacrificing style.",
@@ -67,7 +67,7 @@ const mockOutfits = {
       "Brown leather boots",
       "Gray wool scarf"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1608236415053-3691791bbffe?q=80&w=1974&auto=format&fit=crop"
+    imageUrl: "https://images.unsplash.com/photo-1610652492500-ded49ceeb378?q=80&w=1974&auto=format&fit=crop"
   },
   Sportswear: {
     description: "Performance-focused attire for active lifestyles.",
@@ -77,8 +77,60 @@ const mockOutfits = {
       "Athletic performance sneakers",
       "Sports watch with heart rate monitor"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=1975&auto=format&fit=crop"
+    imageUrl: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=2070&auto=format&fit=crop"
   }
+};
+
+// Added more outfits for enhanced recommendations
+const additionalOutfits = {
+  Casual: [
+    {
+      name: "Weekend Casual",
+      description: "Perfect for weekend outings and casual meet-ups.",
+      items: [
+        "Cream henley shirt",
+        "Olive chino pants",
+        "White canvas sneakers",
+        "Braided leather bracelet"
+      ],
+      imageUrl: "https://images.unsplash.com/photo-1617196034183-421b4917c92d?q=80&w=1974&auto=format&fit=crop"
+    },
+    {
+      name: "Smart Casual",
+      description: "A step up from basic casual without being formal.",
+      items: [
+        "Navy polo shirt",
+        "Khaki chinos",
+        "Brown leather loafers",
+        "Leather belt matching shoes"
+      ],
+      imageUrl: "https://images.unsplash.com/photo-1633280576469-b38f7c007dc9?q=80&w=1974&auto=format&fit=crop"
+    }
+  ],
+  Party: [
+    {
+      name: "Cocktail Party",
+      description: "Sophisticated look for upscale evening events.",
+      items: [
+        "Burgundy dress shirt",
+        "Black slim fit dress pants",
+        "Black leather chelsea boots",
+        "Silver minimalist cufflinks"
+      ],
+      imageUrl: "https://images.unsplash.com/photo-1514222709107-a180c68d72b4?q=80&w=2036&auto=format&fit=crop"
+    },
+    {
+      name: "Casual Party",
+      description: "Stylish but relaxed for less formal gatherings.",
+      items: [
+        "Black fitted t-shirt",
+        "Dark blue jeans",
+        "Leather jacket",
+        "Black ankle boots"
+      ],
+      imageUrl: "https://images.unsplash.com/photo-1520975661595-6453be3f7070?q=80&w=1974&auto=format&fit=crop"
+    }
+  ]
 };
 
 const TryPage = () => {
@@ -230,6 +282,36 @@ const TryPage = () => {
                           ))}
                         </ul>
                       </div>
+
+                      {/* Display additional outfit recommendations if available */}
+                      {additionalOutfits[category as keyof typeof additionalOutfits] && (
+                        <div className="mt-8">
+                          <h3 className="text-lg font-semibold mb-4">More {category} Recommendations</h3>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {additionalOutfits[category as keyof typeof additionalOutfits].map((outfit, index) => (
+                              <Card key={index} className="overflow-hidden">
+                                <div className="h-40 overflow-hidden">
+                                  <img 
+                                    src={outfit.imageUrl} 
+                                    alt={outfit.name}
+                                    className="w-full h-full object-cover" 
+                                  />
+                                </div>
+                                <CardContent className="p-4">
+                                  <h4 className="font-medium text-base">{outfit.name}</h4>
+                                  <p className="text-sm text-gray-600 mt-1 mb-2">{outfit.description}</p>
+                                  <ul className="text-xs list-disc pl-4 space-y-1">
+                                    {outfit.items.slice(0, 2).map((item, i) => (
+                                      <li key={i}>{item}</li>
+                                    ))}
+                                    {outfit.items.length > 2 && <li>+{outfit.items.length - 2} more items</li>}
+                                  </ul>
+                                </CardContent>
+                              </Card>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </TabsContent>
                   ))}
                 </Tabs>

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,15 +16,22 @@ const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Check if user is already logged in
+  useEffect(() => {
+    const currentUser = localStorage.getItem("currentUser");
+    if (currentUser) {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
-    // This would be replaced with actual authentication logic
-    // For demo purposes, we're checking if the user exists
-    setTimeout(() => {
-      // Simulating a user check
+    try {
+      // In a real app, this would be a call to MongoDB using an API
+      // For now, we're simulating authentication with local storage
       const userExists = localStorage.getItem(`user_${email}`);
       
       if (!userExists) {
@@ -38,7 +45,31 @@ const Login = () => {
         return;
       }
 
-      // Mock successful login
+      // Check password (in a real app, would use bcrypt to compare hashed passwords)
+      const userData = JSON.parse(userExists);
+      
+      // In a real app with proper password hashing, we'd use:
+      // const passwordMatch = await bcrypt.compare(password, userData.password);
+      // Since we're mocking, we'll do a simple check
+      
+      // Simple check for demo purposes (insecure for real applications)
+      if (password !== userData.password) {
+        setIsLoading(false);
+        setError("Invalid email or password.");
+        toast({
+          title: "Login failed",
+          description: "Invalid email or password.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Store logged in user info
+      localStorage.setItem("currentUser", JSON.stringify({
+        email: userData.email,
+        name: userData.name
+      }));
+      
       console.log("Login successful for:", email);
       setIsLoading(false);
       
@@ -48,7 +79,16 @@ const Login = () => {
       });
       
       navigate("/dashboard");
-    }, 1500);
+    } catch (err) {
+      console.error("Login error:", err);
+      setIsLoading(false);
+      setError("An error occurred. Please try again.");
+      toast({
+        title: "Login failed",
+        description: "An error occurred. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const redirectToSignup = () => {

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,35 +9,66 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Layout from "@/components/Layout";
 import { useToast } from "@/components/ui/use-toast";
 
+// In a real app, this would be a MongoDB connection setup
+// For now, we'll use localStorage to simulate a database
+const simulateMongoDBConnection = () => {
+  console.log("Connected to MongoDB (simulated)");
+  return {
+    connected: true,
+    url: "mongodb://localhost:27017/styleSenseDB"
+  };
+};
+
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [dbConnection, setDbConnection] = useState<{connected: boolean, url: string} | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Simulate connecting to MongoDB on component mount
+  useEffect(() => {
+    const connection = simulateMongoDBConnection();
+    setDbConnection(connection);
+    console.log("MongoDB connection status:", connection.connected);
+  }, []);
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const currentUser = localStorage.getItem("currentUser");
+    if (currentUser) {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
-    // Check if email already exists
-    const existingUser = localStorage.getItem(`user_${email}`);
-    if (existingUser) {
-      setError("An account with this email already exists.");
-      setIsLoading(false);
-      return;
-    }
+    try {
+      // Check if email already exists
+      const existingUser = localStorage.getItem(`user_${email}`);
+      if (existingUser) {
+        setError("An account with this email already exists.");
+        setIsLoading(false);
+        toast({
+          title: "Registration failed",
+          description: "An account with this email already exists.",
+          variant: "destructive",
+        });
+        return;
+      }
 
-    // This would be replaced with actual registration logic
-    setTimeout(() => {
-      // Mock user data storage
+      // In a real app, we would hash the password before storing it
+      // For demo purposes, we'll store it as is (NEVER do this in production)
       const userData = {
         name,
         email,
-        password: "********", // In a real app, this would be properly hashed
+        password, // In production: await bcrypt.hash(password, 10)
         createdAt: new Date().toISOString(),
         measurements: {
           height: "",
@@ -49,10 +80,16 @@ const Signup = () => {
         outfitHistory: []
       };
 
-      // Store user data in localStorage (for demo purposes only)
+      // Store user data in localStorage (for demo only)
+      // In a real app, we would store this in MongoDB
       localStorage.setItem(`user_${email}`, JSON.stringify(userData));
       
-      // Mock successful registration
+      // Set the user as logged in
+      localStorage.setItem("currentUser", JSON.stringify({
+        email: userData.email,
+        name: userData.name
+      }));
+      
       console.log("Registration successful for:", email);
       setIsLoading(false);
       
@@ -62,7 +99,16 @@ const Signup = () => {
       });
       
       navigate("/dashboard");
-    }, 1500);
+    } catch (err) {
+      console.error("Registration error:", err);
+      setIsLoading(false);
+      setError("An error occurred. Please try again.");
+      toast({
+        title: "Registration failed",
+        description: "An error occurred. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -74,6 +120,11 @@ const Signup = () => {
             <CardDescription className="text-center">
               Enter your information to create your account
             </CardDescription>
+            {dbConnection && dbConnection.connected && (
+              <div className="text-xs text-green-600 text-center">
+                Connected to: {dbConnection.url}
+              </div>
+            )}
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
